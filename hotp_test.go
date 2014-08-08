@@ -28,7 +28,7 @@ func Test_hmacsha1(t *testing.T) {
 	}
 }
 
-func TestHTOP(t *testing.T) {
+func TestGenerateHOTP(t *testing.T) {
 	secret := `12345678901234567890`
 	table := map[int64]string{
 		0: `755224`,
@@ -44,7 +44,13 @@ func TestHTOP(t *testing.T) {
 	}
 
 	for cnt, expected := range table {
-		result := HOTP(secret, cnt, 6, -1)
+		result := GenerateHOTP(secret, cnt, 6)
 		assert.Equal(t, expected, result)
 	}
+}
+
+func TestGeneratedHOTPShouldBeCroppedTo10CodeDigits(t *testing.T) {
+	secret := `12345678901234567890`
+	result := GenerateHOTP(secret, 0, 20)
+	assert.Equal(t, 10, len(result))
 }
