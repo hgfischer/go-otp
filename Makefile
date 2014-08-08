@@ -1,5 +1,4 @@
 SOURCES    := $(shell find . -type f -name '*.go')
-ECHO       := /bin/echo
 GOTOOLDIR  := $(shell go env GOTOOLDIR)
 LINT       := $(GOBIN)/golint
 VET        := $(GOTOOLDIR)/vet
@@ -38,7 +37,7 @@ endif
 
 .PHONY: clean
 clean: check_gopath
-	@$(ECHO) "Removing temp files..."
+	@echo "Removing temp files..."
 	@rm -fv *.cover *.out *.html
 	@go clean -v
 
@@ -72,9 +71,14 @@ lint: $(LINT)
 	@for src in $(SOURCES); do golint $$src || exit 1; done
 
 
-$(VET): check_gopath check_gobin
-	@go get code.google.com/p/go.tools/cmd/vet || exit 0
+.PHONY: check_vet
+check_vet:
+	@if [ ! -x $(VET) ]; then \
+		echo Missing Go vet tool! Please install with the following command...; \
+		echo sudo go get code.google.com/p/go.tools/cmd/vet; \
+		exit 1; \
+	fi
 
 .PHONY: vet
-vet: check_gopath $(VET)
+vet: check_gopath check_vet
 	@for src in $(SOURCES); do go tool vet $$src; done
