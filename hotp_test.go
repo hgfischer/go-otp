@@ -8,7 +8,7 @@ import (
 )
 
 func Test_hmacsha1(t *testing.T) {
-	secret := "12345678901234567890"
+	secret := `12345678901234567890`
 	table := map[int64]string{
 		0: `cc93cf18508d94934c64b65d8ba7667fb7cde4b0`,
 		1: `75a48a19d4cbe100644e8ac1397eea747a2d33ab`,
@@ -28,15 +28,23 @@ func Test_hmacsha1(t *testing.T) {
 	}
 }
 
-//                 Truncated
-//Count    Hexadecimal    Decimal        HOTP
-//0        4c93cf18       1284755224     755224
-//1        41397eea       1094287082     287082
-//2         82fef30        137359152     359152
-//3        66ef7655       1726969429     969429
-//4        61c5938a       1640338314     338314
-//5        33c083d4        868254676     254676
-//6        7256c032       1918287922     287922
-//7         4e5b397         82162583     162583
-//8        2823443f        673399871     399871
-//9        2679dc69        645520489     520489
+func TestHTOP(t *testing.T) {
+	secret := `12345678901234567890`
+	table := map[int64]string{
+		0: `755224`,
+		1: `287082`,
+		2: `359152`,
+		3: `969429`,
+		4: `338314`,
+		5: `254676`,
+		6: `287922`,
+		7: `162583`,
+		8: `399871`,
+		9: `520489`,
+	}
+
+	for cnt, expected := range table {
+		result := HOTP(secret, cnt, 6, -1)
+		assert.Equal(t, expected, result)
+	}
+}
