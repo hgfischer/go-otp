@@ -37,7 +37,7 @@ func (h *HOTP) normalize() {
 	}
 }
 
-// Return a token generated with the current HOTP settings
+// Get a token generated with the current HOTP settings
 func (h *HOTP) Get() string {
 	h.setDefaults()
 	h.normalize()

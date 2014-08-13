@@ -52,7 +52,7 @@ func (t *TOTP) normalize() {
 	}
 }
 
-// Generate a time-based token
+// Get a time-based token
 func (t *TOTP) Get() string {
 	t.setDefaults()
 	t.normalize()
@@ -61,7 +61,7 @@ func (t *TOTP) Get() string {
 	return hotp.Get()
 }
 
-// Fluent interface to set the TOTP generator's time to the current date/time
+// Now is a fluent interface to set the TOTP generator's time to the current date/time
 func (t *TOTP) Now() *TOTP {
 	t.Time = time.Now()
 	return t
