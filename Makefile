@@ -91,4 +91,4 @@ $(GODOCDOWN): check_gopath check_gobin
 
 .PHONY: doc
 doc: $(GODOCDOWN)
-	@godocdown $(PKG) > README.md
+	@godocdown $(PKG) > GODOC.md
