@@ -1,3 +1,5 @@
+![Travis-CI](https://travis-ci.org/hgfischer/go-otp.svg)
+
 # OTP
 
 Package go-otp implements one-time-password generators used in 2-factor authentication systems like RSA-tokens and Google Authenticator. Currently this supports both HOTP (RFC-4226) and TOTP (RFC-6238).
