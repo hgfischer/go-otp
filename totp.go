@@ -5,8 +5,9 @@ import "time"
 // TOTP is used to generate tokens based on RFC-6238.
 //
 // Example:
-// totp := &TOTP{Secret: "your-secret"}
-// token := totp.Get()
+//
+//  totp := &TOTP{Secret: "your-secret"}
+//  token := totp.Get()
 //
 // TOTP assumes a set of default values for Secret, Length, Time, Period,
 // WindowBack and WindowForward.

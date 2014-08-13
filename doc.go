@@ -22,9 +22,9 @@
 // ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
 
-// Package go-otp is a One-Time-Password algorithm implementation of both RFC-4226 and
-// RFC-6238. All tests used in this package, uses reference values from both RFCs for
-// greater compatibility with another implementations.
+// Package go-otp implements one-time-password generators.
+// Currently it supports both HOTP (RFC-4226) and TOTP (RFC-6238).
+// All tests used in this package, uses reference values from both RFCs to ensure
+// compatibility with another OTP implementations.
 package otp

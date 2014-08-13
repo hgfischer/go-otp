@@ -8,8 +8,9 @@ import (
 // HOTP is used to generate tokens based on RFC-4226.
 //
 // Example:
-// hotp := &HOTP{Secret: "your-secret", Counter: 1000, Length: 8}
-// token := hotp.Get()
+//
+//  hotp := &HOTP{Secret: "your-secret", Counter: 1000, Length: 8}
+//  token := hotp.Get()
 //
 // HOTP assumes a set of default values for Secret, Length and Counter.
 // If no Secret is informed, HOTP will generate a random one that you
