@@ -25,3 +25,33 @@ func TestTOTP(t *testing.T) {
 		assert.True(t, totp.Verify(result))
 	}
 }
+
+func TestTOTPShouldBeCroppedToMaxLength(t *testing.T) {
+	totp := &TOTP{Length: 20}
+	result := totp.Get()
+	assert.Equal(t, MaxLength, len(result))
+}
+
+func TestTOTPShouldUseDefaultValues(t *testing.T) {
+	totp := &TOTP{}
+	result := totp.Get()
+	assert.NotEmpty(t, totp.Secret)
+	assert.Equal(t, DefaultLength, totp.Length)
+	assert.False(t, totp.Time.IsZero())
+	assert.Equal(t, totp.Length, len(result))
+}
+
+func TestTOTPShouldUseCurrentTimeWithFluentInterface(t *testing.T) {
+	past := time.Date(1979, 3, 26, 19, 30, 0, 0, time.Local)
+	now := time.Now().Format(time.Kitchen)
+	totp := &TOTP{Time: past}
+	totp.Now().Get()
+	assert.Equal(t, now, totp.Time.Format(time.Kitchen))
+}
+
+func TestTOTPVerifyShouldFail(t *testing.T) {
+	past := time.Now().Add(time.Second * DefaultPeriod * -2)
+	totp := &TOTP{Time: past}
+	token := totp.Get()
+	assert.False(t, totp.Now().Verify(token))
+}

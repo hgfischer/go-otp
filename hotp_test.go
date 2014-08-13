@@ -28,9 +28,16 @@ func TestHOTP(t *testing.T) {
 	}
 }
 
-func TestHOTPShouldBeCroppedTo10CodeDigits(t *testing.T) {
-	secret := `12345678901234567890`
-	hotp := &HOTP{Secret: secret, Counter: 0, Length: 20}
+func TestHOTPShouldBeCroppedToMaxLength(t *testing.T) {
+	hotp := &HOTP{Length: 20}
 	result := hotp.Get()
-	assert.Equal(t, 10, len(result))
+	assert.Equal(t, MaxLength, len(result))
+}
+
+func TestHOTPShouldUseDefaultValues(t *testing.T) {
+	hotp := &HOTP{}
+	result := hotp.Get()
+	assert.Equal(t, DefaultLength, hotp.Length)
+	assert.NotEmpty(t, hotp.Secret)
+	assert.Equal(t, hotp.Length, len(result))
 }

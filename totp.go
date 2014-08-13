@@ -2,44 +2,56 @@ package otp
 
 import "time"
 
+// TOTP is used to generate tokens based on RFC-6238.
+//
+// Example:
+// totp := &TOTP{Secret: "your-secret"}
+// token := totp.Get()
+//
+// TOTP assumes a set of default values for Secret, Length, Time, Period,
+// WindowBack and WindowForward.
+//
+// If no Secret is informed, TOTP will generate a random one that you
+// need to store with the Counter, for future token verifications.
+//
+// Check this package constants to see the current default values.
 type TOTP struct {
-	Secret string
-	Length uint8
-	Time   time.Time
-	Period uint8
-	Window struct {
-		Back    uint8
-		Forward uint8
-	}
+	Secret        string    // The secret used to generate a token
+	Length        uint8     // The token length
+	Time          time.Time // The time used to generate the token
+	Period        uint8     // The step size to slice time, in seconds
+	WindowBack    uint8     // How many steps HOTP will go backwards to validate a token
+	WindowForward uint8     // How many steps HOTP will go forward to validate a token
 }
 
 func (t *TOTP) setDefaults() {
 	if len(t.Secret) == 0 {
-		t.Secret = randomString(100)
+		t.Secret = randomString(DefaultRandomSecretLength)
 	}
 	if t.Length == 0 {
-		t.Length = 6
+		t.Length = DefaultLength
 	}
 	if t.Time.IsZero() {
 		t.Time = time.Now()
 	}
 	if t.Period == 0 {
-		t.Period = 30
+		t.Period = DefaultPeriod
 	}
-	if t.Window.Back == 0 {
-		t.Window.Back = 1
+	if t.WindowBack == 0 {
+		t.WindowBack = DefaultWindowBack
 	}
-	if t.Window.Forward == 0 {
-		t.Window.Forward = 1
+	if t.WindowForward == 0 {
+		t.WindowForward = DefaultWindowForward
 	}
 }
 
 func (t *TOTP) normalize() {
-	if t.Length > 10 {
-		t.Length = 10
+	if t.Length > MaxLength {
+		t.Length = MaxLength
 	}
 }
 
+// Generate a time-based token
 func (t *TOTP) Get() string {
 	t.setDefaults()
 	t.normalize()
@@ -48,15 +60,17 @@ func (t *TOTP) Get() string {
 	return hotp.Get()
 }
 
-func (t *TOTP) GetNow() string {
+// Fluent interface to set the TOTP generator's time to the current date/time
+func (t *TOTP) Now() *TOTP {
 	t.Time = time.Now()
-	return t.Get()
+	return t
 }
 
+// Verify a token with the current settings, including the WindowBack and WindowForward
 func (t TOTP) Verify(token string) bool {
 	t.setDefaults()
 	t.normalize()
-	for i := int(t.Window.Back) * -1; i <= int(t.Window.Forward); i++ {
+	for i := int(t.WindowBack) * -1; i <= int(t.WindowForward); i++ {
 		t.Time = t.Time.Add(time.Second * time.Duration(int(t.Period)*i))
 		if t.Get() == token {
 			return true
