@@ -23,8 +23,8 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-// Package go-otp implements one-time-password generators.
-// Currently it supports both HOTP (RFC-4226) and TOTP (RFC-6238).
+// Package go-otp implements one-time-password generators used in 2-factor authentication systems like RSA-tokens and Google Authenticator. Currently this supports both HOTP (RFC-4226) and TOTP (RFC-6238).
+//
 // All tests used in this package, uses reference values from both RFCs to ensure
 // compatibility with another OTP implementations.
 package otp

@@ -1,9 +1,11 @@
 SOURCES    := $(shell find . -type f -name '*.go')
 GOTOOLDIR  := $(shell go env GOTOOLDIR)
 LINT       := $(GOBIN)/golint
+GODOCDOWN  := $(GOBIN)/godocdown
 VET        := $(GOTOOLDIR)/vet
 COVER      := $(GOTOOLDIR)/cover
 PKGS       := $(shell go list ./...)
+PKG        := $(shell go list)
 COVER_OUT  := coverage.out
 COVER_HTML := coverage.html
 TMP_COVER  := tmp_cover.out
@@ -82,3 +84,11 @@ check_vet:
 .PHONY: vet
 vet: check_gopath check_vet
 	@for src in $(SOURCES); do go tool vet $$src; done
+
+
+$(GODOCDOWN): check_gopath check_gobin
+	@go get github.com/robertkrimen/godocdown/godocdown
+
+.PHONY: doc
+doc: $(GODOCDOWN)
+	@godocdown $(PKG) > README.md
