@@ -13,7 +13,7 @@ $ go get github.com/hgfischer/go-otp
 
 ## Usage
 
-Check API docs, with examples, at [http://godoc.org/github.com/hgfischer/go-otp]
+Check API docs, with examples, at http://godoc.org/github.com/hgfischer/go-otp
 
 
 
