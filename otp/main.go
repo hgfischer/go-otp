@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/base32"
 	"flag"
 	"fmt"
 
@@ -16,16 +17,17 @@ var (
 
 func main() {
 	flag.Parse()
+	key, _ := base32.StdEncoding.DecodeString(*secret)
 
 	totp := &otp.TOTP{
-		Secret: *secret,
+		Secret: string(key),
 		Length: uint8(*length),
 		Period: uint8(*period),
 	}
 	fmt.Println("TOTP:", totp.Get())
 
 	hotp := &otp.HOTP{
-		Secret:  *secret,
+		Secret:  string(key),
 		Length:  uint8(*length),
 		Counter: *counter,
 	}
