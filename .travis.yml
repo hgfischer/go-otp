@@ -1,5 +1,6 @@
 language: go
 install:
     go get github.com/stretchr/testify/assert
+    go get github.com/codegangsta/cli
 go:
   - 1.3
