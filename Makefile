@@ -46,6 +46,7 @@ clean: check_gopath
 
 .PHONY: test
 test: $(SYMLINK) check_gopath
+	@go get -t
 	@for pkg in $(PKGS); do go test -v -race $$pkg || exit 1; done
 
 
