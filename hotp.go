@@ -28,7 +28,7 @@ func (h *HOTP) setDefaults() {
 		h.Secret = randomString(DefaultRandomSecretLength)
 	}
 	if h.Length == 0 {
-		h.Length = 6
+		h.Length = DefaultLength
 	}
 }
 
