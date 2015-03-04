@@ -4,16 +4,18 @@ import (
 	"crypto/hmac"
 	"crypto/rand"
 	"crypto/sha1"
+	"encoding/base32"
 )
 
+func GenerateToken(size int) string {
+	return randomString(size)
+}
+
 func randomString(size int) string {
-	alphanum := "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 	var bytes = make([]byte, size)
 	rand.Read(bytes)
-	for i, b := range bytes {
-		bytes[i] = alphanum[b%byte(len(alphanum))]
-	}
-	return string(bytes)
+	
+	return base32.StdEncoding.EncodeToString(bytes)
 }
 
 func counterToBytes(counter uint64) (text []byte) {

@@ -3,6 +3,7 @@ package otp
 import (
 	"fmt"
 	"math"
+	"encoding/base32"
 )
 
 // HOTP is used to generate tokens based on RFC-4226.
@@ -27,7 +28,7 @@ func (h *HOTP) setDefaults() {
 		h.Secret = randomString(DefaultRandomSecretLength)
 	}
 	if h.Length == 0 {
-		h.Length = DefaultLength
+		h.Length = 6
 	}
 }
 
@@ -42,7 +43,8 @@ func (h *HOTP) Get() string {
 	h.setDefaults()
 	h.normalize()
 	text := counterToBytes(h.Counter)
-	hash := hmacSHA1([]byte(h.Secret), text)
+	secretBytes, _ := base32.StdEncoding.DecodeString(h.Secret)
+	hash := hmacSHA1(secretBytes, text)
 	binary := truncate(hash)
 	otp := int64(binary) % int64(math.Pow10(int(h.Length)))
 	hotp := fmt.Sprintf(fmt.Sprintf("%%0%dd", h.Length), otp)
