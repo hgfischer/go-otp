@@ -37,7 +37,7 @@ func TestHOTPShouldBeCroppedToMaxLength(t *testing.T) {
 func TestHOTPShouldUseDefaultValues(t *testing.T) {
 	hotp := &HOTP{}
 	result := hotp.Get()
-	assert.Equal(t, DefaultLength, hotp.Length)
+	assert.Equal(t, uint8(DefaultLength), hotp.Length)
 	assert.NotEmpty(t, hotp.Secret)
-	assert.Equal(t, hotp.Length, len(result))
+	assert.Equal(t, hotp.Length, uint8(len(result)))
 }

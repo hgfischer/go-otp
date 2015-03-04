@@ -36,9 +36,9 @@ func TestTOTPShouldUseDefaultValues(t *testing.T) {
 	totp := &TOTP{}
 	result := totp.Get()
 	assert.NotEmpty(t, totp.Secret)
-	assert.Equal(t, DefaultLength, totp.Length)
+	assert.Equal(t, uint8(DefaultLength), totp.Length)
 	assert.False(t, totp.Time.IsZero())
-	assert.Equal(t, totp.Length, len(result))
+	assert.Equal(t, totp.Length, uint8(len(result)))
 }
 
 func TestTOTPShouldUseCurrentTimeWithFluentInterface(t *testing.T) {
