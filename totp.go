@@ -6,28 +6,28 @@ import "time"
 //
 // Example:
 //
-//  totp := &TOTP{Secret: "your-secret"}
+//  totp := &TOTP{Secret: "your-secret", IsBase32Secret: true}
 //  token := totp.Get()
 //
-// TOTP assumes a set of default values for Secret, Length, Time, Period,
-// WindowBack and WindowForward.
+// TOTP assumes a set of default values for Secret, Length, Time, Period, WindowBack, WindowForward and IsBase32Secret
 //
-// If no Secret is informed, TOTP will generate a random one that you
-// need to store with the Counter, for future token verifications.
+// If no Secret is informed, TOTP will generate a random one that you need to store with the Counter, for future token
+// verifications.
 //
 // Check this package constants to see the current default values.
 type TOTP struct {
-	Secret        string    // The secret used to generate a token
-	Length        uint8     // The token length
-	Time          time.Time // The time used to generate the token
-	Period        uint8     // The step size to slice time, in seconds
-	WindowBack    uint8     // How many steps HOTP will go backwards to validate a token
-	WindowForward uint8     // How many steps HOTP will go forward to validate a token
+	Secret         string    // The secret used to generate a token
+	Length         uint8     // The token length
+	Time           time.Time // The time used to generate the token
+	IsBase32Secret bool      //
+	Period         uint8     // The step size to slice time, in seconds
+	WindowBack     uint8     // How many steps HOTP will go backwards to validate a token
+	WindowForward  uint8     // How many steps HOTP will go forward to validate a token
 }
 
 func (t *TOTP) setDefaults() {
 	if len(t.Secret) == 0 {
-		t.Secret = randomString(DefaultRandomSecretLength)
+		t.Secret = generateRandomSecret(DefaultRandomSecretLength, t.IsBase32Secret)
 	}
 	if t.Length == 0 {
 		t.Length = DefaultLength
@@ -57,7 +57,7 @@ func (t *TOTP) Get() string {
 	t.setDefaults()
 	t.normalize()
 	ts := uint64(t.Time.Unix() / int64(t.Period))
-	hotp := &HOTP{Secret: t.Secret, Counter: ts, Length: t.Length}
+	hotp := &HOTP{Secret: t.Secret, Counter: ts, Length: t.Length, IsBase32Secret: t.IsBase32Secret}
 	return hotp.Get()
 }
 

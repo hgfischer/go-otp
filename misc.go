@@ -7,15 +7,17 @@ import (
 	"encoding/base32"
 )
 
-func GenerateToken(size int) string {
-	return randomString(size)
-}
-
-func randomString(size int) string {
+func generateRandomSecret(size int, encodeToBase32 bool) string {
+	alphanum := "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 	var bytes = make([]byte, size)
 	rand.Read(bytes)
-	
-	return base32.StdEncoding.EncodeToString(bytes)
+	for i, b := range bytes {
+		bytes[i] = alphanum[b%byte(len(alphanum))]
+	}
+	if encodeToBase32 {
+		return base32.StdEncoding.EncodeToString(bytes)
+	}
+	return string(bytes)
 }
 
 func counterToBytes(counter uint64) (text []byte) {
