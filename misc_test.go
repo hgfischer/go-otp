@@ -1,6 +1,7 @@
 package otp
 
 import (
+	"encoding/base32"
 	"fmt"
 	"testing"
 
@@ -25,5 +26,15 @@ func TestHMACSHA1(t *testing.T) {
 	for cnt, expected := range table {
 		result := hmacSHA1([]byte(secret), counterToBytes(cnt))
 		assert.Equal(t, expected, fmt.Sprintf("%x", result))
+	}
+}
+
+func TestGenerateRandomSecret(t *testing.T) {
+	// Brute force test to check if the returned string is
+	// a valid Base32 string.
+	for i := 0; i < 1000; i++ {
+		secret := generateRandomSecret(20, true)
+		_, err := base32.StdEncoding.DecodeString(secret)
+		assert.Nil(t, err)
 	}
 }
