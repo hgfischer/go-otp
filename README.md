@@ -2,6 +2,8 @@
 
 # OTP
 
+[![Join the chat at https://gitter.im/hgfischer/go-otp](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/hgfischer/go-otp?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Package go-otp implements one-time-password generators used in 2-factor authentication systems like RSA-tokens and Google Authenticator. Currently this supports both HOTP (RFC-4226) and TOTP (RFC-6238).
 
 
