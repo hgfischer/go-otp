@@ -16,6 +16,7 @@ import "time"
 //
 // Check this package constants to see the current default values.
 type TOTP struct {
+	HashAlgo	   Hash      // The chosen hash algorithm
 	Secret         string    // The secret used to generate a token
 	Length         uint8     // The token length
 	Time           time.Time // The time used to generate the token
@@ -57,7 +58,13 @@ func (t *TOTP) Get() string {
 	t.setDefaults()
 	t.normalize()
 	ts := uint64(t.Time.Unix() / int64(t.Period))
-	hotp := &HOTP{Secret: t.Secret, Counter: ts, Length: t.Length, IsBase32Secret: t.IsBase32Secret}
+	hotp := &HOTP {
+				HashAlgo: t.HashAlgo,
+				Secret: t.Secret,
+				Counter: ts,
+				Length: t.Length,
+				IsBase32Secret: t.IsBase32Secret,
+			}
 	return hotp.Get()
 }
 
