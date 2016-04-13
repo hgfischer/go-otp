@@ -71,8 +71,9 @@ func (t *TOTP) Now() *TOTP {
 func (t TOTP) Verify(token string) bool {
 	t.setDefaults()
 	t.normalize()
+	givenTime := t.Time
 	for i := int(t.WindowBack) * -1; i <= int(t.WindowForward); i++ {
-		t.Time = t.Time.Add(time.Second * time.Duration(int(t.Period)*i))
+		t.Time = givenTime.Add(time.Second * time.Duration(int(t.Period)*i))
 		if t.Get() == token {
 			return true
 		}
