@@ -74,3 +74,31 @@ func TestTOTPVerifyShouldFail(t *testing.T) {
 	token := totp.Get()
 	assert.False(t, totp.Now().Verify(token))
 }
+
+func TestTOTPVerifyShouldSucceedWithinWindowForward(t *testing.T) {
+	future := time.Now().Add(time.Second * DefaultPeriod * 3)
+	totp := &TOTP{Time: future, WindowForward: 3}
+	token := totp.Get()
+	assert.True(t, totp.Now().Verify(token))
+}
+
+func TestTOTPVerifyShouldSucceedWithinWindowBack(t *testing.T) {
+	past := time.Now().Add(time.Second * DefaultPeriod * -3)
+	totp := &TOTP{Time: past, WindowBack: 3}
+	token := totp.Get()
+	assert.True(t, totp.Now().Verify(token))
+}
+
+func TestTOTPVerifyShouldFailOutOfWindowForward(t *testing.T) {
+	future := time.Now().Add(time.Second * DefaultPeriod * 4)
+	totp := &TOTP{Time: future, WindowForward: 3}
+	token := totp.Get()
+	assert.False(t, totp.Now().Verify(token))
+}
+
+func TestTOTPVerifyShouldFailOutOfWindowBack(t *testing.T) {
+	past := time.Now().Add(time.Second * DefaultPeriod * -4)
+	totp := &TOTP{Time: past, WindowBack: 3}
+	token := totp.Get()
+	assert.False(t, totp.Now().Verify(token))
+}
