@@ -18,6 +18,7 @@ import (
 // the Counter, for future token verifications. Check this package constants to see the
 // current default values.
 type HOTP struct {
+	HashAlgo	   Hash  // The chosen hash algorithm
 	Secret         string // The secret used to generate the token
 	Length         uint8  // The token size, with a maximum determined by MaxLength
 	Counter        uint64 // The counter used as moving factor
@@ -47,9 +48,9 @@ func (h *HOTP) Get() string {
 	var hash []byte
 	if h.IsBase32Secret {
 		secretBytes, _ := base32.StdEncoding.DecodeString(h.Secret)
-		hash = hmacSHA1(secretBytes, text)
+		hash = hmacSHA(h.HashAlgo, secretBytes, text)
 	} else {
-		hash = hmacSHA1([]byte(h.Secret), text)
+		hash = hmacSHA(h.HashAlgo, []byte(h.Secret), text)
 	}
 	binary := truncate(hash)
 	otp := int64(binary) % int64(math.Pow10(int(h.Length)))
