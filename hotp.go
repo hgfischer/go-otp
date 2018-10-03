@@ -46,7 +46,13 @@ func (h *HOTP) Get() string {
 	text := counterToBytes(h.Counter)
 	var hash []byte
 	if h.IsBase32Secret {
-		secretBytes, _ := base32.StdEncoding.DecodeString(h.Secret)
+		secret := h.Secret
+		for len(secret)%8 != 0 {
+			secret = secret + "="
+		}
+		fmt.Println(h.Secret)
+		fmt.Println(secret)
+		secretBytes, _ := base32.StdEncoding.DecodeString(secret)
 		hash = hmacSHA1(secretBytes, text)
 	} else {
 		hash = hmacSHA1([]byte(h.Secret), text)
