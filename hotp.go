@@ -4,6 +4,7 @@ import (
 	"encoding/base32"
 	"fmt"
 	"math"
+	"strings"
 )
 
 // HOTP is used to generate tokens based on RFC-4226.
@@ -39,6 +40,13 @@ func (h *HOTP) normalize() {
 	}
 }
 
+func (h *HOTP) alignSecret() {
+	missingPadding := len(h.Secret) % 8
+	if missingPadding != 0 {
+		h.Secret += strings.Repeat("=", 8-missingPadding)
+	}
+}
+
 // Get a token generated with the current HOTP settings
 func (h *HOTP) Get() string {
 	h.setDefaults()
@@ -46,6 +54,7 @@ func (h *HOTP) Get() string {
 	text := counterToBytes(h.Counter)
 	var hash []byte
 	if h.IsBase32Secret {
+		h.alignSecret()
 		secretBytes, _ := base32.StdEncoding.DecodeString(h.Secret)
 		hash = hmacSHA1(secretBytes, text)
 	} else {
